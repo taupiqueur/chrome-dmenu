@@ -1,0 +1,6 @@
+{
+  "dmenu": {
+    "command": "dmenu",
+    "args": []
+  }
+}
