@@ -1,6 +1,6 @@
 # dmenu for Chrome
 
-Tab search, selection and beyond with a dynamic menu program.
+A browser extension that lets you search tabs with a dynamic menu program—such as [dmenu].
 
 [dmenu]: https://tools.suckless.org/dmenu/
 
