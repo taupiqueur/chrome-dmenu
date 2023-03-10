@@ -15,6 +15,19 @@ const configPromise = fetch('config.json').then(response => response.json())
 const suggestionTypeDisplay = { openTab: 'Open tab', recentlyClosedTab: 'Recently closed', bookmark: 'Bookmark', history: 'History', download: 'Download' }
 const DMENU_TEMPLATE = (item, index) => `${index} ${suggestionTypeDisplay[item.type]} ${item.title} ${item.url}`
 
+// Handles the initial setup when the extension is first installed or updated to a new version.
+// Reference: https://developer.chrome.com/docs/extensions/reference/runtime/#event-onInstalled
+function onInstalled(details) {
+  switch (details.reason) {
+    case 'install':
+      onInstall()
+      break
+    case 'update':
+      onUpdate(details.previousVersion)
+      break
+  }
+}
+
 // Handles the initial setup when the extension is first installed.
 async function onInstall() {
   const config = await configPromise
@@ -29,11 +42,13 @@ async function onUpdate(previousVersion) {
 }
 
 // Handles option changes.
+// Reference: https://developer.chrome.com/docs/extensions/reference/storage/#event-onChanged
 function onOptionsChange(changes, areaName) {
   Object.assign(dmenu, changes.dmenu.newValue)
 }
 
-// Handles the browser action.
+// Handles the browser action on click.
+// Reference: https://developer.chrome.com/docs/extensions/reference/action/#event-onClicked
 async function onAction(tab) {
   const suggestions = await getSuggestions()
   const selection = await dmenu.run(suggestions, DMENU_TEMPLATE)
@@ -42,34 +57,10 @@ async function onAction(tab) {
   }
 }
 
-// Configure dmenu.
-chrome.storage.sync.get(options => Object.assign(dmenu, options.dmenu))
-
-// Handle the initial setup when the extension is first installed or updated to a new version.
-// Reference: https://developer.chrome.com/docs/extensions/reference/runtime/#event-onInstalled
-chrome.runtime.onInstalled.addListener((details) => {
-  switch (details.reason) {
-    case 'install':
-      onInstall()
-      break
-    case 'update':
-      onUpdate(details.previousVersion)
-      break
-  }
-})
-
-// Handle option changes.
-// Reference: https://developer.chrome.com/docs/extensions/reference/storage/#event-onChanged
-chrome.storage.onChanged.addListener(onOptionsChange)
-
-// Handle the browser action on click.
-// Reference: https://developer.chrome.com/docs/extensions/reference/action/#event-onClicked
-chrome.action.onClicked.addListener(onAction)
-
-// Handle long-lived connections.
-// Use the channel name to distinguish different types of connections.
+// Handles long-lived connections.
+// Uses the channel name to distinguish different types of connections.
 // Reference: https://developer.chrome.com/docs/extensions/mv3/messaging/#connect
-chrome.runtime.onConnect.addListener((port) => {
+function onConnect(port) {
   switch (port.name) {
     case 'options':
       optionsWorker.onConnect(port)
@@ -77,4 +68,14 @@ chrome.runtime.onConnect.addListener((port) => {
     default:
       port.postMessage({ type: 'error', message: `Unknown type of connection: ${port.name}` })
   }
-})
+}
+
+// Configure dmenu.
+chrome.storage.sync.get(options => Object.assign(dmenu, options.dmenu))
+
+// Set up listeners.
+// Reference: https://developer.chrome.com/docs/extensions/mv3/service_workers/#listeners
+chrome.runtime.onInstalled.addListener(onInstalled)
+chrome.storage.onChanged.addListener(onOptionsChange)
+chrome.action.onClicked.addListener(onAction)
+chrome.runtime.onConnect.addListener(onConnect)
