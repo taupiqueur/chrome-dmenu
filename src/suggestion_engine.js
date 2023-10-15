@@ -2,14 +2,21 @@
 
 import { getOpenTabSuggestions, getRecentlyClosedTabSuggestions, getBookmarkSuggestions, getHistorySuggestions, getDownloadSuggestions } from './suggestion_providers.js'
 
-export async function getSuggestions() {
-  const suggestionResults = await Promise.all([
-    getOpenTabSuggestions(),
-    getRecentlyClosedTabSuggestions(),
-    getBookmarkSuggestions(),
-    getHistorySuggestions(),
-    getDownloadSuggestions()
-  ])
+// Constant representing the list of all suggestion functions.
+const SUGGESTION_FUNCTIONS = [
+  getOpenTabSuggestions,
+  getRecentlyClosedTabSuggestions,
+  getBookmarkSuggestions,
+  getHistorySuggestions,
+  getDownloadSuggestions
+]
+
+export async function getSuggestions(context) {
+  const suggestionResults = await Promise.all(
+    SUGGESTION_FUNCTIONS.map(
+      getSuggestions => getSuggestions(context)
+    )
+  )
   return suggestionResults.flat()
 }
 

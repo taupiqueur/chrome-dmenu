@@ -7,6 +7,7 @@ A browser extension that lets you search tabs with a dynamic menu program—such
 ## Features
 
 - Tab search.
+- List tabs by recency.
 - Recently closed tab search.
 - Bookmark search.
 - History search.

@@ -10,8 +10,32 @@ const newOpenTabSuggestion = tab => ({
   url: tab.url
 })
 
-export async function getOpenTabSuggestions() {
+export async function getOpenTabSuggestions(context) {
+  const { tab, mostRecentlyUsedTabsManager } = context
+
+  const tabIds = mostRecentlyUsedTabsManager.getMostRecentTabs()
+
+  // Map tab IDs to their position in the list of recent tabs.
+  const tabIdToPosition = new Map(
+    tabIds.map((tabId, position) => [
+      tabId, position
+    ])
+  )
+
   const tabs = await chrome.tabs.query({})
+
+  // Sort tabs by most recently used.
+  tabs.sort((tab, otherTab) => {
+    const tabIndex = tabIdToPosition.get(tab.id) ?? -1
+    const otherTabIndex = tabIdToPosition.get(otherTab.id) ?? -1
+    return tabIndex - otherTabIndex
+  })
+
+  // Exclude the current tab.
+  if (tabs[0].id === tab.id) {
+    tabs.shift()
+  }
+
   return tabs.map(newOpenTabSuggestion)
 }
 
@@ -24,7 +48,7 @@ const newRecentlyClosedTabSuggestion = tabSession => ({
   url: tabSession.tab.url
 })
 
-export async function getRecentlyClosedTabSuggestions() {
+export async function getRecentlyClosedTabSuggestions(context) {
   const sessions = await chrome.sessions.getRecentlyClosed()
   const suggestions = []
   for (const session of sessions) {
@@ -52,7 +76,7 @@ const newBookmarkSuggestion = bookmark => ({
   url: bookmark.url
 })
 
-export async function getBookmarkSuggestions() {
+export async function getBookmarkSuggestions(context) {
   const bookmarks = await chrome.bookmarks.search({})
   return bookmarks.map(newBookmarkSuggestion)
 }
@@ -65,7 +89,7 @@ const newHistorySuggestion = historyItem => ({
   url: historyItem.url
 })
 
-export async function getHistorySuggestions() {
+export async function getHistorySuggestions(context) {
   const historyItems = await chrome.history.search({ text: '' })
   return historyItems.map(newHistorySuggestion)
 }
@@ -79,7 +103,7 @@ const newDownloadSuggestion = downloadItem => ({
   url: downloadItem.finalUrl
 })
 
-export async function getDownloadSuggestions() {
+export async function getDownloadSuggestions(context) {
   const downloadItems = await chrome.downloads.search({ state: 'complete', exists: true })
   return downloadItems.map(newDownloadSuggestion)
 }
