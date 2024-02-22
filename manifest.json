@@ -9,7 +9,16 @@
     "type": "module",
     "service_worker": "src/background.js"
   },
-  "permissions": ["bookmarks", "downloads", "history", "nativeMessaging", "sessions", "storage", "tabGroups", "tabs"],
+  "permissions": [
+    "bookmarks",
+    "downloads",
+    "history",
+    "nativeMessaging",
+    "sessions",
+    "storage",
+    "tabGroups",
+    "tabs"
+  ],
   "action": {
     "default_title": "Search tabs with dmenu"
   },

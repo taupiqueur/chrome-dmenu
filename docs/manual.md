@@ -13,7 +13,7 @@ Navigate to `chrome://extensions/shortcuts` to configure keyboard shortcuts.
 ### Configure the dynamic menu program
 
 You can also configure the dynamic menu program by importing and exporting settings
-in the **Options** page—Right-click the dmenu toolbar button and select **Options**.
+in the “Options” page—Right-click the dmenu toolbar button and select “Options”.
 
 Example configuration:
 

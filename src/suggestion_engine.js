@@ -1,6 +1,18 @@
 // This module contains the suggestion engine.
 
-import { getOpenTabSuggestions, getRecentlyClosedTabSuggestions, getBookmarkSuggestions, getHistorySuggestions, getDownloadSuggestions } from './suggestion_providers.js'
+import {
+  getOpenTabSuggestions,
+  getRecentlyClosedTabSuggestions,
+  getBookmarkSuggestions,
+  getHistorySuggestions,
+  getDownloadSuggestions,
+} from './suggestion_providers.js'
+
+/**
+ * @typedef {OpenTabSuggestion | RecentlyClosedTabSuggestion | BookmarkSuggestion | HistorySuggestion | DownloadSuggestion} Suggestion
+ */
+
+const { TAB_GROUP_ID_NONE } = chrome.tabGroups
 
 // Constant representing the list of all suggestion functions.
 const SUGGESTION_FUNCTIONS = [
@@ -11,47 +23,85 @@ const SUGGESTION_FUNCTIONS = [
   getDownloadSuggestions
 ]
 
-export async function getSuggestions(context) {
+/**
+ * Retrieves suggestions.
+ *
+ * @param {Context} cx
+ * @returns {Promise<Suggestion[]>}
+ */
+export async function getSuggestions(cx) {
   const suggestionResults = await Promise.all(
     SUGGESTION_FUNCTIONS.map(
-      getSuggestions => getSuggestions(context)
+      (getSuggestions) => getSuggestions(cx)
     )
   )
   return suggestionResults.flat()
 }
 
-export async function activateSuggestion(suggestion) {
+/**
+ * Activates a given suggestion.
+ *
+ * @param {Suggestion} suggestion
+ * @param {Context} cx
+ * @returns {Promise<void>}
+ */
+export async function activateSuggestion(suggestion, cx) {
   switch (suggestion.type) {
     case 'openTab':
-      await chrome.tabs.update(suggestion.tabId, { active: true })
-      await chrome.windows.update(suggestion.windowId, { focused: true })
+      await chrome.tabs.update(suggestion.tabId, {
+        active: true
+      })
+      await chrome.windows.update(suggestion.windowId, {
+        focused: true
+      })
       break
+
     case 'recentlyClosedTab':
       await chrome.sessions.restore(suggestion.sessionId)
       break
+
     case 'bookmark':
-      await openNewTabRight({ url: suggestion.url })
+      await openNewTabRight(cx, suggestion.url)
       break
+
     case 'history':
-      await openNewTabRight({ url: suggestion.url })
+      await openNewTabRight(cx, suggestion.url)
       break
+
     case 'download':
       await chrome.downloads.show(suggestion.downloadId)
       break
+
     default:
       console.error(
-        `Activation not yet implemented for suggestions of type: ${suggestion.type}.`
+        'Activation not yet implemented for suggestions of type: "%s"',
+        suggestion.type
       )
   }
 }
 
-// Opens and activates a new tab to the right.
-async function openNewTabRight(createProperties) {
-  const [openerTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
-  const createdTab = await chrome.tabs.create({ active: true, index: openerTab.index + 1, openerTabId: openerTab.id, ...createProperties })
+/**
+ * Opens and activates a new tab to the right.
+ *
+ * @param {Context} cx
+ * @param {string} url
+ * @returns {Promise<void>}
+ */
+async function openNewTabRight(cx, url) {
+  const createdTab = await chrome.tabs.create({
+    active: true,
+    url,
+    index: cx.tab.index + 1,
+    openerTabId: cx.tab.id,
+    windowId: cx.tab.windowId
+  })
 
-  // Add the new tab to the opener tab’s group, if it has one.
-  if (openerTab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
-    await chrome.tabs.group({ tabIds: [createdTab.id], groupId: openerTab.groupId })
+  if (cx.tab.groupId !== TAB_GROUP_ID_NONE) {
+    await chrome.tabs.group({
+      groupId: cx.tab.groupId,
+      tabIds: [
+        createdTab.id
+      ]
+    })
   }
 }
