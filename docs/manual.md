@@ -32,7 +32,7 @@ Example configuration:
     "command": "sh",
     "args": [
       "-c",
-      "cat > /tmp/stdin && alacritty -e sh -c 'fzy < /tmp/stdin > /tmp/stdout' && [ -s /tmp/stdout ] && cat /tmp/stdout"
+      "cat > /tmp/stdin && alacritty -e sh -c 'fzy -l max -q \"OPEN_TAB \" < /tmp/stdin > /tmp/stdout' && [ -s /tmp/stdout ] && cat /tmp/stdout"
     ]
   }
 }

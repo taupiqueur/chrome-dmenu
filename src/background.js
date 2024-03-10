@@ -28,12 +28,12 @@ const gettingDefaults = fetch('config.json')
 
 // Config for menu display.
 const suggestionTypeDisplay = {
-  openTab: 'Open tab',
-  recentlyClosedTab: 'Recently closed',
-  bookmark: 'Bookmark',
-  readingList: 'Reading list',
-  history: 'History',
-  download: 'Download'
+  openTab: 'OPEN_TAB',
+  recentlyClosedTab: 'RECENTLY_CLOSED',
+  bookmark: 'BOOKMARK',
+  readingList: 'READING_LIST',
+  history: 'HISTORY',
+  download: 'DOWNLOAD'
 }
 
 /**
@@ -41,9 +41,10 @@ const suggestionTypeDisplay = {
  *
  * @param {Suggestion} item
  * @param {number} index
+ * @param {number} digitCount
  * @returns {string}
  */
-const DMENU_TEMPLATE = (item, index) => `${index} ${suggestionTypeDisplay[item.type]} ${item.title} ${item.url}`
+const DMENU_TEMPLATE = (item, index, digitCount) => `${index.toString().padStart(digitCount, '0')} ${suggestionTypeDisplay[item.type]} ${item.title} ${item.url}`
 
 /**
  * Handles the initial setup when the extension is first installed or updated to a new version.
