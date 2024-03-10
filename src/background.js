@@ -31,6 +31,7 @@ const suggestionTypeDisplay = {
   openTab: 'Open tab',
   recentlyClosedTab: 'Recently closed',
   bookmark: 'Bookmark',
+  readingList: 'Reading list',
   history: 'History',
   download: 'Download'
 }

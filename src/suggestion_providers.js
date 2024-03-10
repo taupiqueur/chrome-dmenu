@@ -146,6 +146,38 @@ export async function getBookmarkSuggestions(cx) {
     .map(newBookmarkSuggestion)
 }
 
+// Reading list suggestions ----------------------------------------------------
+
+/**
+ * @typedef {object} ReadingListSuggestion
+ * @property {"readingList"} type
+ * @property {string} title
+ * @property {string} url
+ */
+
+/**
+ * Creates a new reading list suggestion.
+ *
+ * @param {chrome.readingList.ReadingListEntry} item
+ * @returns {ReadingListSuggestion}
+ */
+const newReadingListSuggestion = item => ({
+  type: 'readingList',
+  title: item.title,
+  url: item.url
+})
+
+/**
+ * Retrieves reading list suggestions.
+ *
+ * @param {Context} cx
+ * @returns {Promise<ReadingListSuggestion[]>}
+ */
+export async function getReadingListSuggestions(cx) {
+  const items = await chrome.readingList.query({})
+  return items.map(newReadingListSuggestion)
+}
+
 // History suggestions ---------------------------------------------------------
 
 /**

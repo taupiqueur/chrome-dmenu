@@ -4,12 +4,13 @@ import {
   getOpenTabSuggestions,
   getRecentlyClosedTabSuggestions,
   getBookmarkSuggestions,
+  getReadingListSuggestions,
   getHistorySuggestions,
   getDownloadSuggestions,
 } from './suggestion_providers.js'
 
 /**
- * @typedef {OpenTabSuggestion | RecentlyClosedTabSuggestion | BookmarkSuggestion | HistorySuggestion | DownloadSuggestion} Suggestion
+ * @typedef {OpenTabSuggestion | RecentlyClosedTabSuggestion | BookmarkSuggestion | ReadingListSuggestion | HistorySuggestion | DownloadSuggestion} Suggestion
  */
 
 const { TAB_GROUP_ID_NONE } = chrome.tabGroups
@@ -19,6 +20,7 @@ const SUGGESTION_FUNCTIONS = [
   getOpenTabSuggestions,
   getRecentlyClosedTabSuggestions,
   getBookmarkSuggestions,
+  getReadingListSuggestions,
   getHistorySuggestions,
   getDownloadSuggestions
 ]
@@ -61,6 +63,10 @@ export async function activateSuggestion(suggestion, cx) {
       break
 
     case 'bookmark':
+      await openNewTabRight(cx, suggestion.url)
+      break
+
+    case 'readingList':
       await openNewTabRight(cx, suggestion.url)
       break
 
