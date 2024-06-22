@@ -20,6 +20,8 @@ import {
 import optionsWorker from './options/service_worker.js'
 import RecentTabsManager from './recent_tabs_manager.js'
 
+const { TAB_GROUP_ID_NONE } = chrome.tabGroups
+
 const recentTabsManager = new RecentTabsManager
 
 // Retrieve the default config.
@@ -47,6 +49,27 @@ const suggestionTypeDisplay = {
 const DMENU_TEMPLATE = (item, index, digitCount) => `${index.toString().padStart(digitCount, '0')} ${suggestionTypeDisplay[item.type]} ${item.title} ${item.url}`
 
 /**
+ * Adds items to the browser’s context menu.
+ *
+ * https://developer.chrome.com/docs/extensions/reference/api/contextMenus
+ *
+ * @returns {void}
+ */
+function createMenuItems() {
+  chrome.contextMenus.create({
+    id: 'open_documentation',
+    title: 'Documentation',
+    contexts: ['action']
+  })
+
+  chrome.contextMenus.create({
+    id: 'open_support_chat',
+    title: 'Support Chat',
+    contexts: ['action']
+  })
+}
+
+/**
  * Handles the initial setup when the extension is first installed or updated to a new version.
  *
  * https://developer.chrome.com/docs/extensions/reference/api/runtime#event-onInstalled
@@ -64,6 +87,7 @@ function onInstalled(details) {
       onUpdate(details.previousVersion)
       break
   }
+  createMenuItems()
 }
 
 /**
@@ -128,6 +152,53 @@ async function onAction(tab) {
   for (const suggestion of selection) {
     activateSuggestion(suggestion, {
       tab
+    })
+  }
+}
+
+/**
+ * Handles the context menu on click.
+ *
+ * https://developer.chrome.com/docs/extensions/reference/api/contextMenus#event-onClicked
+ *
+ * @param {chrome.contextMenus.OnClickData} info
+ * @param {chrome.tabs.Tab} tab
+ * @returns {void}
+ */
+function onMenuItemClicked(info, tab) {
+  switch (info.menuItemId) {
+    case 'open_documentation':
+      openNewTabRight(tab, 'src/manual/manual.html')
+      break
+
+    case 'open_support_chat':
+      openNewTabRight(tab, 'https://web.libera.chat/gamja/#taupiqueur')
+      break
+  }
+}
+
+/**
+ * Opens and activates a new tab to the right.
+ *
+ * @param {chrome.tabs.Tab} openerTab
+ * @param {string} url
+ * @returns {Promise<void>}
+ */
+async function openNewTabRight(openerTab, url) {
+  const createdTab = await chrome.tabs.create({
+    active: true,
+    url,
+    index: openerTab.index + 1,
+    openerTabId: openerTab.id,
+    windowId: openerTab.windowId
+  })
+
+  if (openerTab.groupId !== TAB_GROUP_ID_NONE) {
+    await chrome.tabs.group({
+      groupId: openerTab.groupId,
+      tabIds: [
+        createdTab.id
+      ]
     })
   }
 }
@@ -205,6 +276,7 @@ function onWindowFocusChanged(windowId) {
 chrome.runtime.onInstalled.addListener(onInstalled)
 chrome.storage.onChanged.addListener(onOptionsChange)
 chrome.action.onClicked.addListener(onAction)
+chrome.contextMenus.onClicked.addListener(onMenuItemClicked)
 chrome.runtime.onConnect.addListener(onConnect)
 chrome.tabs.onActivated.addListener(onTabActivated)
 chrome.tabs.onRemoved.addListener(onTabRemoved)
