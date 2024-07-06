@@ -67,6 +67,12 @@ function createMenuItems() {
     title: 'Support Chat',
     contexts: ['action']
   })
+
+  chrome.contextMenus.create({
+    id: 'open_sponsorship_page',
+    title: 'Sponsor this project',
+    contexts: ['action']
+  })
 }
 
 /**
@@ -173,6 +179,10 @@ function onMenuItemClicked(info, tab) {
 
     case 'open_support_chat':
       openNewTabRight(tab, 'https://web.libera.chat/gamja/#taupiqueur')
+      break
+
+    case 'open_sponsorship_page':
+      openNewTabRight(tab, 'https://github.com/sponsors/taupiqueur')
       break
   }
 }
