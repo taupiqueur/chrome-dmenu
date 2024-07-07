@@ -10,6 +10,7 @@ A browser extension that lets you search tabs with a dynamic menu program—such
 - List tabs by recency.
 - Recently closed tab search.
 - Bookmark search.
+- Reading list search.
 - History search.
 - Download search.
 - Combined search.
