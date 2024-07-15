@@ -10,12 +10,14 @@
     "service_worker": "src/background.js"
   },
   "permissions": [
+    "activeTab",
     "bookmarks",
     "contextMenus",
     "downloads",
     "history",
     "nativeMessaging",
     "readingList",
+    "scripting",
     "sessions",
     "storage",
     "tabGroups",
