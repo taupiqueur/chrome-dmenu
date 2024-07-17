@@ -36,24 +36,24 @@ const newOpenTabSuggestion = tab => ({
 export async function getOpenTabSuggestions(cx) {
   const tabs = await chrome.tabs.query({})
 
-  const tabIds = cx.recentTabsManager.getRecentTabs()
+  const recentTabs = cx.recentTabsManager.getRecentTabs()
 
-  const tabIndexMap = new Map(
-    tabIds.map((tabId, index) => [
-      tabId, index
-    ])
-  )
+  const tabMap = new Map
 
-  const sortedTabs = tabs.toSorted((tab, otherTab) =>
-    (tabIndexMap.get(tab.id) ?? -1) - (tabIndexMap.get(otherTab.id) ?? -1)
-  )
-
-  // This is a cheap means to exclude the current tab.
-  if (sortedTabs[0].id === cx.tab.id) {
-    sortedTabs.shift()
+  for (const tabId of recentTabs) {
+    tabMap.set(tabId, null)
   }
 
-  return sortedTabs.map(newOpenTabSuggestion)
+  for (const tab of tabs) {
+    tabMap.set(tab.id, tab)
+  }
+
+  tabMap.delete(cx.tab.id)
+
+  return Array.from(
+    tabMap.values(),
+    newOpenTabSuggestion
+  )
 }
 
 // Closed tab suggestions ------------------------------------------------------
