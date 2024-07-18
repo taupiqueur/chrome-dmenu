@@ -1,8 +1,19 @@
 # dmenu for Chrome
 
+<img src="assets/dmenu-logo.svg" alt="" width="96" height="96" align="left">
+
 A browser extension that lets you search tabs with a dynamic menu program—such as [dmenu].
 
 [dmenu]: https://tools.suckless.org/dmenu/
+
+**[Documentation] | [Changelog] | [Contributing]**
+
+**[Add to Chrome]**
+
+[Documentation]: docs/manual.md
+[Changelog]: CHANGELOG.md
+[Contributing]: CONTRIBUTING.md
+[Add to Chrome]: #Installation
 
 ## Features
 
