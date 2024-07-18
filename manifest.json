@@ -30,10 +30,10 @@
     "page": "src/options/options.html"
   },
   "icons": {
-    "16": "assets/suckless-logo@16px.png",
-    "32": "assets/suckless-logo@32px.png",
-    "48": "assets/suckless-logo@48px.png",
-    "128": "assets/suckless-logo@128px.png"
+    "16": "assets/dmenu-logo@16px.png",
+    "32": "assets/dmenu-logo@32px.png",
+    "48": "assets/dmenu-logo@48px.png",
+    "128": "assets/dmenu-logo@128px.png"
   },
   "commands": {
     "_execute_action": {
