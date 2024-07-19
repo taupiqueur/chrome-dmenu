@@ -3,6 +3,7 @@
 import {
   getOpenTabSuggestions,
   getRecentlyClosedTabSuggestions,
+  getSyncedTabSuggestions,
   getBookmarkSuggestions,
   getReadingListSuggestions,
   getHistorySuggestions,
@@ -19,6 +20,7 @@ const { TAB_GROUP_ID_NONE } = chrome.tabGroups
 const SUGGESTION_FUNCTIONS = [
   getOpenTabSuggestions,
   getRecentlyClosedTabSuggestions,
+  getSyncedTabSuggestions,
   getBookmarkSuggestions,
   getReadingListSuggestions,
   getHistorySuggestions,
@@ -59,6 +61,10 @@ export async function activateSuggestion(suggestion, cx) {
       break
 
     case 'recentlyClosedTab':
+      await chrome.sessions.restore(suggestion.sessionId)
+      break
+
+    case 'syncedTab':
       await chrome.sessions.restore(suggestion.sessionId)
       break
 

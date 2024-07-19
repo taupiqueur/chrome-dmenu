@@ -20,6 +20,7 @@ A browser extension that lets you search tabs with a dynamic menu program—such
 - Tab search.
 - List tabs by recency.
 - Recently closed tab search.
+- Synced tab search.
 - Bookmark search.
 - Reading list search.
 - History search.

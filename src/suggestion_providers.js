@@ -112,6 +112,53 @@ export async function getRecentlyClosedTabSuggestions(cx) {
   return suggestions
 }
 
+// Synced tab suggestions ------------------------------------------------------
+
+/**
+ * @typedef {object} SyncedTabSuggestion
+ * @property {"syncedTab"} type
+ * @property {string} deviceName
+ * @property {number} sessionId
+ * @property {string} title
+ * @property {string} url
+ */
+
+/**
+ * Creates a new synced tab suggestion.
+ *
+ * @param {string} deviceName
+ * @param {chrome.sessions.Session} tabSession
+ * @returns {SyncedTabSuggestion}
+ */
+const newSyncedTabSuggestion = (deviceName, tabSession) => ({
+  type: 'syncedTab',
+  deviceName,
+  sessionId: tabSession.tab.sessionId,
+  title: tabSession.tab.title,
+  url: tabSession.tab.url
+})
+
+/**
+ * Retrieves synced tab suggestions.
+ *
+ * @param {Context} cx
+ * @returns {Promise<SyncedTabSuggestion[]>}
+ */
+export async function getSyncedTabSuggestions(cx) {
+  const devices = await chrome.sessions.getDevices()
+
+  return devices.flatMap((device) =>
+    device.sessions.flatMap((session) =>
+      session.window.tabs.map((tab) =>
+        newSyncedTabSuggestion(device.deviceName, {
+          tab,
+          lastModified: session.lastModified
+        })
+      )
+    )
+  )
+}
+
 // Bookmark suggestions --------------------------------------------------------
 
 /**

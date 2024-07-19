@@ -32,6 +32,7 @@ const gettingDefaults = fetch('config.json')
 const suggestionTypeDisplay = {
   openTab: 'OPEN_TAB',
   recentlyClosedTab: 'RECENTLY_CLOSED',
+  syncedTab: 'SYNCED_TAB',
   bookmark: 'BOOKMARK',
   readingList: 'READING_LIST',
   history: 'HISTORY',
