@@ -13,7 +13,7 @@ A browser extension that lets you search tabs with a dynamic menu program—such
 [Documentation]: docs/manual.md
 [Changelog]: CHANGELOG.md
 [Contributing]: CONTRIBUTING.md
-[Add to Chrome]: #Installation
+[Add to Chrome]: #installation
 
 ## Features
 
