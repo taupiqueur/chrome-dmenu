@@ -24,10 +24,6 @@ const { TAB_GROUP_ID_NONE } = chrome.tabGroups
 
 const recentTabsManager = new RecentTabsManager
 
-// Retrieve the default config.
-const gettingDefaults = fetch('config.json')
-  .then((response) => response.json())
-
 // Config for menu display.
 const suggestionTypeDisplay = {
   openTab: 'OPEN_TAB',
@@ -109,7 +105,7 @@ function onInstalled(details) {
  * @returns {Promise<void>}
  */
 async function onInstall() {
-  const defaults = await gettingDefaults
+  const defaults = await optionsWorker.getDefaults()
   await chrome.storage.sync.set(defaults)
   await chrome.tabs.create({
     active: true,
@@ -124,7 +120,7 @@ async function onInstall() {
  * @returns {Promise<void>}
  */
 async function onUpdate(previousVersion) {
-  const defaults = await gettingDefaults
+  const defaults = await optionsWorker.getDefaults()
   const localStorage = await chrome.storage.sync.get()
   await chrome.storage.sync.set({
     ...defaults,
