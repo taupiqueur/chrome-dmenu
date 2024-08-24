@@ -18,6 +18,7 @@ import {
 } from './suggestion_engine.js'
 
 import optionsWorker from './options/service_worker.js'
+import manualWorker from './manual/service_worker.js'
 import RecentTabsManager from './recent_tabs_manager.js'
 
 const { TAB_GROUP_ID_NONE } = chrome.tabGroups
@@ -292,6 +293,10 @@ function onConnect(port) {
   switch (port.name) {
     case 'options':
       optionsWorker.onConnect(port)
+      break
+
+    case 'manual':
+      manualWorker.onConnect(port)
       break
 
     default:
