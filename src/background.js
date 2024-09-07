@@ -337,6 +337,19 @@ function onTabRemoved(tabId, removeInfo) {
 }
 
 /**
+ * Handles tab replacement, when a tab is replaced with another tab due to pre-rendering or instant.
+ *
+ * https://developer.chrome.com/docs/extensions/reference/api/tabs#event-onReplaced
+ *
+ * @param {number} addedTabId
+ * @param {number} removedTabId
+ * @returns {void}
+ */
+function onTabReplaced(addedTabId, removedTabId) {
+  recentTabsManager.onTabReplaced(addedTabId, removedTabId)
+}
+
+/**
  * Handles window activation, when the currently focused window changes.
  * Will be `WINDOW_ID_NONE` if all Chrome windows have lost focus.
  *
@@ -361,5 +374,6 @@ chrome.contextMenus.onClicked.addListener(onMenuItemClicked)
 chrome.runtime.onConnect.addListener(onConnect)
 chrome.tabs.onActivated.addListener(onTabActivated)
 chrome.tabs.onRemoved.addListener(onTabRemoved)
+chrome.tabs.onReplaced.addListener(onTabReplaced)
 chrome.windows.onFocusChanged.addListener(onWindowFocusChanged)
 recentTabsManager.onStartup()
