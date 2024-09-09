@@ -12,7 +12,7 @@ Permission | Justification
 [`"bookmarks"`] | This permission is used to get bookmark suggestions.
 [`"contextMenus"`] | This permission is used to add the “Documentation” and “Support Chat” buttons to the dmenu toolbar.
 [`"downloads"`] | This permission is used to get and activate download suggestions.
-[`"history"`] | This permission is used to get history suggestions.
+[`"history"`] | This permission is used to get recently visited page suggestions.
 [`"nativeMessaging"`] | This permission is used to allow communication with the shell application.
 [`"readingList"`] | This permission is used to get reading list suggestions.
 [`"scripting"`] | This permission is used for copying debug information to the system clipboard.

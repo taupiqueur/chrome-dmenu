@@ -28,11 +28,11 @@ const recentTabsManager = new RecentTabsManager
 // Config for menu display.
 const suggestionTypeDisplay = {
   openTab: 'OPEN_TAB',
-  recentlyClosedTab: 'RECENTLY_CLOSED',
+  closedTab: 'RECENTLY_CLOSED',
   syncedTab: 'SYNCED_TAB',
   bookmark: 'BOOKMARK',
   readingList: 'READING_LIST',
-  history: 'HISTORY',
+  history: 'RECENTLY_VISITED',
   download: 'DOWNLOAD'
 }
 

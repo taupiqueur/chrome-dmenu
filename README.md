@@ -23,7 +23,7 @@ A browser extension that lets you search tabs with a dynamic menu program—such
 - Synced tab search.
 - Bookmark search.
 - Reading list search.
-- History search.
+- Recently visited page search.
 - Download search.
 - Combined search.
 

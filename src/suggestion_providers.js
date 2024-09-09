@@ -65,21 +65,21 @@ export async function getOpenTabSuggestions(cx) {
 // Closed tab suggestions ------------------------------------------------------
 
 /**
- * @typedef {object} RecentlyClosedTabSuggestion
- * @property {"recentlyClosedTab"} type
+ * @typedef {object} ClosedTabSuggestion
+ * @property {"closedTab"} type
  * @property {number} sessionId
  * @property {string} title
  * @property {string} url
  */
 
 /**
- * Creates a new recently closed tab suggestion.
+ * Creates a new closed tab suggestion.
  *
  * @param {chrome.sessions.Session} tabSession
- * @returns {RecentlyClosedTabSuggestion}
+ * @returns {ClosedTabSuggestion}
  */
-const newRecentlyClosedTabSuggestion = tabSession => ({
-  type: 'recentlyClosedTab',
+const newClosedTabSuggestion = tabSession => ({
+  type: 'closedTab',
   sessionId: tabSession.tab.sessionId,
   title: tabSession.tab.title,
   url: tabSession.tab.url
@@ -89,7 +89,7 @@ const newRecentlyClosedTabSuggestion = tabSession => ({
  * Retrieves recently closed tab suggestions.
  *
  * @param {Context} cx
- * @returns {Promise<RecentlyClosedTabSuggestion[]>}
+ * @returns {Promise<ClosedTabSuggestion[]>}
  */
 export async function getRecentlyClosedTabSuggestions(cx) {
   const sessions = await chrome.sessions.getRecentlyClosed()
@@ -98,7 +98,7 @@ export async function getRecentlyClosedTabSuggestions(cx) {
     switch (true) {
       case 'tab' in session:
         suggestions.push(
-          newRecentlyClosedTabSuggestion(session)
+          newClosedTabSuggestion(session)
         )
         break
 
@@ -106,7 +106,7 @@ export async function getRecentlyClosedTabSuggestions(cx) {
         const { lastModified } = session
         for (const tab of session.window.tabs) {
           suggestions.push(
-            newRecentlyClosedTabSuggestion({
+            newClosedTabSuggestion({
               tab,
               lastModified
             })
@@ -253,12 +253,12 @@ const newHistorySuggestion = historyItem => ({
 })
 
 /**
- * Retrieves history suggestions.
+ * Retrieves recently visited page suggestions.
  *
  * @param {Context} cx
  * @returns {Promise<HistorySuggestion[]>}
  */
-export async function getHistorySuggestions(cx) {
+export async function getRecentlyVisitedPageSuggestions(cx) {
   const historyItems = await chrome.history.search({
     text: ''
   })
