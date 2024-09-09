@@ -16,7 +16,7 @@ import {
   SuggestionType,
   getSuggestions,
   activateSuggestion,
-} from './suggestion_engine.js'
+} from './suggestion_engine/suggestion_engine.js'
 
 import optionsWorker from './options/service_worker.js'
 import manualWorker from './manual/service_worker.js'
