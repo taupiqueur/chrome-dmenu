@@ -48,6 +48,12 @@ export async function getOpenTabSuggestions(cx) {
     tabMap.set(tab.id, tab)
   }
 
+  for (const tabId of recentTabs) {
+    if (tabMap.get(tabId) === null) {
+      tabMap.delete(tabId)
+    }
+  }
+
   tabMap.delete(cx.tab.id)
 
   return Array.from(
