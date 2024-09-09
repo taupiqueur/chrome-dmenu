@@ -157,7 +157,7 @@ function onOptionsChange(changes, areaName) {
  * @returns {Promise<void>}
  */
 async function onAction(tab) {
-  const suggestions = await getSuggestions({
+  const suggestions = await getSuggestions(SuggestionType.Combined, '', {
     tab,
     recentTabsManager
   })

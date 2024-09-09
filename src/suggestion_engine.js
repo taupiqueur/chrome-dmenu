@@ -25,32 +25,62 @@ export const SuggestionType = {
   ReadingList: 'readingList',
   History: 'history',
   Download: 'download',
+  Combined: 'combined',
 }
 
-// Constant representing the list of all suggestion functions.
-const SUGGESTION_FUNCTIONS = [
-  getOpenTabSuggestions,
-  getRecentlyClosedTabSuggestions,
-  getSyncedTabSuggestions,
-  getBookmarkSuggestions,
-  getReadingListSuggestions,
-  getRecentlyVisitedPageSuggestions,
-  getDownloadSuggestions
-]
-
 /**
- * Retrieves suggestions.
+ * Retrieves suggestions of specified type.
+ * Specify an empty search text (`""`) to retrieve all suggestions.
  *
+ * NOTE: Search text is ignored for some suggestion types.
+ *
+ * @param {SuggestionType} suggestionType
+ * @param {string} searchText
  * @param {Context} cx
  * @returns {Promise<Suggestion[]>}
  */
-export async function getSuggestions(cx) {
-  const suggestionResults = await Promise.all(
-    SUGGESTION_FUNCTIONS.map(
-      (getSuggestions) => getSuggestions(cx)
-    )
-  )
-  return suggestionResults.flat()
+export async function getSuggestions(suggestionType, searchText, cx) {
+  switch (suggestionType) {
+    case SuggestionType.OpenTab:
+      return getOpenTabSuggestions(searchText, cx)
+
+    case SuggestionType.ClosedTab:
+      return getRecentlyClosedTabSuggestions(searchText, cx)
+
+    case SuggestionType.SyncedTab:
+      return getSyncedTabSuggestions(searchText, cx)
+
+    case SuggestionType.Bookmark:
+      return getBookmarkSuggestions(searchText, cx)
+
+    case SuggestionType.ReadingList:
+      return getReadingListSuggestions(searchText, cx)
+
+    case SuggestionType.History:
+      return getRecentlyVisitedPageSuggestions(searchText, cx)
+
+    case SuggestionType.Download:
+      return getDownloadSuggestions(searchText, cx)
+
+    case SuggestionType.Combined: {
+      const suggestionResults = await Promise.all([
+        getOpenTabSuggestions(searchText, cx),
+        getRecentlyClosedTabSuggestions(searchText, cx),
+        getSyncedTabSuggestions(searchText, cx),
+        getBookmarkSuggestions(searchText, cx),
+        getReadingListSuggestions(searchText, cx),
+        getRecentlyVisitedPageSuggestions(searchText, cx),
+        getDownloadSuggestions(searchText, cx),
+      ])
+      return suggestionResults.flat()
+    }
+
+    default:
+      console.error(
+        'Suggestion provider not yet implemented for suggestions of type: "%s"',
+        suggestionType
+      )
+  }
 }
 
 /**

@@ -30,10 +30,13 @@ const newOpenTabSuggestion = tab => ({
  * Results are ordered by recency and
  * the current tab is not included.
  *
+ * NOTE: Search text is ignored for this suggestion type.
+ *
+ * @param {string} searchText
  * @param {Context} cx
  * @returns {Promise<OpenTabSuggestion[]>}
  */
-export async function getOpenTabSuggestions(cx) {
+export async function getOpenTabSuggestions(searchText, cx) {
   const tabs = await chrome.tabs.query({})
 
   const recentTabs = cx.recentTabsManager.getRecentTabs()
@@ -88,10 +91,13 @@ const newClosedTabSuggestion = tabSession => ({
 /**
  * Retrieves recently closed tab suggestions.
  *
+ * NOTE: Search text is ignored for this suggestion type.
+ *
+ * @param {string} searchText
  * @param {Context} cx
  * @returns {Promise<ClosedTabSuggestion[]>}
  */
-export async function getRecentlyClosedTabSuggestions(cx) {
+export async function getRecentlyClosedTabSuggestions(searchText, cx) {
   const sessions = await chrome.sessions.getRecentlyClosed()
   const suggestions = []
   for (const session of sessions) {
@@ -147,10 +153,13 @@ const newSyncedTabSuggestion = (deviceName, tabSession) => ({
 /**
  * Retrieves synced tab suggestions.
  *
+ * NOTE: Search text is ignored for this suggestion type.
+ *
+ * @param {string} searchText
  * @param {Context} cx
  * @returns {Promise<SyncedTabSuggestion[]>}
  */
-export async function getSyncedTabSuggestions(cx) {
+export async function getSyncedTabSuggestions(searchText, cx) {
   const devices = await chrome.sessions.getDevices()
 
   return devices.flatMap((device) =>
@@ -189,11 +198,16 @@ const newBookmarkSuggestion = bookmark => ({
 /**
  * Retrieves bookmark suggestions.
  *
+ * @param {string} searchText
  * @param {Context} cx
  * @returns {Promise<BookmarkSuggestion[]>}
  */
-export async function getBookmarkSuggestions(cx) {
-  const bookmarks = await chrome.bookmarks.search({})
+export async function getBookmarkSuggestions(searchText, cx) {
+  const bookmarks = await chrome.bookmarks.search({
+    query: searchText === ''
+      ? null
+      : searchText
+  })
   return bookmarks
     .filter((bookmark) => bookmark.url)
     .map(newBookmarkSuggestion)
@@ -223,10 +237,13 @@ const newReadingListSuggestion = item => ({
 /**
  * Retrieves reading list suggestions.
  *
+ * NOTE: Search text is ignored for this suggestion type.
+ *
+ * @param {string} searchText
  * @param {Context} cx
  * @returns {Promise<ReadingListSuggestion[]>}
  */
-export async function getReadingListSuggestions(cx) {
+export async function getReadingListSuggestions(searchText, cx) {
   const items = await chrome.readingList.query({})
   return items.map(newReadingListSuggestion)
 }
@@ -255,12 +272,13 @@ const newHistorySuggestion = historyItem => ({
 /**
  * Retrieves recently visited page suggestions.
  *
+ * @param {string} searchText
  * @param {Context} cx
  * @returns {Promise<HistorySuggestion[]>}
  */
-export async function getRecentlyVisitedPageSuggestions(cx) {
+export async function getRecentlyVisitedPageSuggestions(searchText, cx) {
   const historyItems = await chrome.history.search({
-    text: ''
+    text: searchText
   })
   return historyItems.map(newHistorySuggestion)
 }
@@ -291,13 +309,15 @@ const newDownloadSuggestion = downloadItem => ({
 /**
  * Retrieves download suggestions.
  *
+ * @param {string} searchText
  * @param {Context} cx
  * @returns {Promise<DownloadSuggestion[]>}
  */
-export async function getDownloadSuggestions(cx) {
+export async function getDownloadSuggestions(searchText, cx) {
   const downloadItems = await chrome.downloads.search({
     state: 'complete',
-    exists: true
+    exists: true,
+    query: [searchText]
   })
   return downloadItems.map(newDownloadSuggestion)
 }
