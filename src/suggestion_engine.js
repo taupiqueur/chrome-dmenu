@@ -16,6 +16,17 @@ import {
 
 const { TAB_GROUP_ID_NONE } = chrome.tabGroups
 
+// Enum representing a suggestion type.
+export const SuggestionType = {
+  OpenTab: 'openTab',
+  ClosedTab: 'closedTab',
+  SyncedTab: 'syncedTab',
+  Bookmark: 'bookmark',
+  ReadingList: 'readingList',
+  History: 'history',
+  Download: 'download',
+}
+
 // Constant representing the list of all suggestion functions.
 const SUGGESTION_FUNCTIONS = [
   getOpenTabSuggestions,
@@ -51,7 +62,7 @@ export async function getSuggestions(cx) {
  */
 export async function activateSuggestion(suggestion, cx) {
   switch (suggestion.type) {
-    case 'openTab':
+    case SuggestionType.OpenTab:
       await chrome.tabs.update(suggestion.tabId, {
         active: true
       })
@@ -60,27 +71,27 @@ export async function activateSuggestion(suggestion, cx) {
       })
       break
 
-    case 'closedTab':
+    case SuggestionType.ClosedTab:
       await chrome.sessions.restore(suggestion.sessionId)
       break
 
-    case 'syncedTab':
+    case SuggestionType.SyncedTab:
       await chrome.sessions.restore(suggestion.sessionId)
       break
 
-    case 'bookmark':
+    case SuggestionType.Bookmark:
       await openNewTabRight(cx, suggestion.url)
       break
 
-    case 'readingList':
+    case SuggestionType.ReadingList:
       await openNewTabRight(cx, suggestion.url)
       break
 
-    case 'history':
+    case SuggestionType.History:
       await openNewTabRight(cx, suggestion.url)
       break
 
-    case 'download':
+    case SuggestionType.Download:
       await chrome.downloads.show(suggestion.downloadId)
       break
 

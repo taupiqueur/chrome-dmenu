@@ -13,6 +13,7 @@
 import dmenu from './dmenu.js'
 
 import {
+  SuggestionType,
   getSuggestions,
   activateSuggestion,
 } from './suggestion_engine.js'
@@ -27,13 +28,13 @@ const recentTabsManager = new RecentTabsManager
 
 // Config for menu display.
 const suggestionTypeDisplay = {
-  openTab: 'OPEN_TAB',
-  closedTab: 'RECENTLY_CLOSED',
-  syncedTab: 'SYNCED_TAB',
-  bookmark: 'BOOKMARK',
-  readingList: 'READING_LIST',
-  history: 'RECENTLY_VISITED',
-  download: 'DOWNLOAD'
+  [SuggestionType.OpenTab]: 'OPEN_TAB',
+  [SuggestionType.ClosedTab]: 'RECENTLY_CLOSED',
+  [SuggestionType.SyncedTab]: 'SYNCED_TAB',
+  [SuggestionType.Bookmark]: 'BOOKMARK',
+  [SuggestionType.ReadingList]: 'READING_LIST',
+  [SuggestionType.History]: 'RECENTLY_VISITED',
+  [SuggestionType.Download]: 'DOWNLOAD',
 }
 
 /**
