@@ -27,15 +27,15 @@ const { TAB_GROUP_ID_NONE } = chrome.tabGroups
 const recentTabsManager = new RecentTabsManager
 
 // Config for menu display.
-const suggestionTypeDisplay = {
-  [SuggestionType.OpenTab]: 'OPEN_TAB',
-  [SuggestionType.ClosedTab]: 'RECENTLY_CLOSED',
-  [SuggestionType.SyncedTab]: 'SYNCED_TAB',
-  [SuggestionType.Bookmark]: 'BOOKMARK',
-  [SuggestionType.ReadingList]: 'READING_LIST',
-  [SuggestionType.History]: 'RECENTLY_VISITED',
-  [SuggestionType.Download]: 'DOWNLOAD',
-}
+const suggestionTypeDisplay = new Map([
+  [SuggestionType.OpenTab, 'OPEN_TAB'],
+  [SuggestionType.ClosedTab, 'RECENTLY_CLOSED'],
+  [SuggestionType.SyncedTab, 'SYNCED_TAB'],
+  [SuggestionType.Bookmark, 'BOOKMARK'],
+  [SuggestionType.ReadingList, 'READING_LIST'],
+  [SuggestionType.History, 'RECENTLY_VISITED'],
+  [SuggestionType.Download, 'DOWNLOAD'],
+])
 
 /**
  * Template for dmenu.
@@ -45,7 +45,7 @@ const suggestionTypeDisplay = {
  * @param {number} digitCount
  * @returns {string}
  */
-const DMENU_TEMPLATE = (item, index, digitCount) => `${index.toString().padStart(digitCount, '0')} ${suggestionTypeDisplay[item.type]} ${item.title} ${item.url}`
+const DMENU_TEMPLATE = (item, index, digitCount) => `${index.toString().padStart(digitCount, '0')} ${suggestionTypeDisplay.get(item.type)} ${item.title} ${item.url}`
 
 /**
  * Adds items to the browser’s context menu.
