@@ -16,7 +16,7 @@ Permission | Justification
 [`"nativeMessaging"`] | This permission is used to allow communication with the shell application.
 [`"readingList"`] | This permission is used to get reading list suggestions.
 [`"scripting"`] | This permission is used for copying debug information to the system clipboard.
-[`"sessions"`] | This permission is used to get and activate recently closed tab suggestions.
+[`"sessions"`] | This permission is used to get and activate recently closed and synced tab suggestions.
 [`"storage"`] | This permission is used to save your options and persist some states in memory, related to the MRU.
 [`"tabGroups"`] | This permission is used to open a new tab to the right.
 [`"tabs"`] | This permission is used to get open tab suggestions.
