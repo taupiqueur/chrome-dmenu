@@ -4,27 +4,20 @@
 // Service workers: https://developer.chrome.com/docs/extensions/develop/concepts/service-workers
 // Messaging: https://developer.chrome.com/docs/extensions/develop/concepts/messaging
 
-/**
- * @typedef {object} Context
- * @property {chrome.tabs.Tab} tab
- * @property {RecentTabsManager} recentTabsManager
- */
-
 import dmenu from './dmenu.js'
-
-import {
-  SuggestionType,
-  getSuggestions,
-  activateSuggestion,
-} from './suggestion_engine/suggestion_engine.js'
 
 import optionsWorker from './options/service_worker.js'
 import manualWorker from './manual/service_worker.js'
 import RecentTabsManager from './recent_tabs_manager.js'
+import SuggestionEngine, { SuggestionType } from './suggestion_engine/suggestion_engine.js'
 
 const { TAB_GROUP_ID_NONE } = chrome.tabGroups
 
 const recentTabsManager = new RecentTabsManager
+
+const suggestionEngine = new SuggestionEngine({
+  recentTabsManager
+})
 
 // Config for menu display.
 const suggestionTypeDisplay = new Map([
@@ -157,18 +150,17 @@ function onOptionsChange(changes, areaName) {
  * @returns {Promise<void>}
  */
 async function onAction(tab) {
-  const suggestions = await getSuggestions(SuggestionType.Combined, '', {
-    tab,
-    recentTabsManager
+  const suggestions = await suggestionEngine.search({
+    mode: 'combined',
+    query: ''
   })
-
   const selection = await dmenu.run(suggestions, DMENU_TEMPLATE)
 
-  for (const suggestion of selection) {
-    activateSuggestion(suggestion, {
-      tab
-    })
-  }
+  await Promise.all(
+    selection.map((suggestion) =>
+      suggestionEngine.activate(suggestion, tab)
+    )
+  )
 }
 
 /**
