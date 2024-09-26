@@ -20,7 +20,7 @@ const suggestionEngine = new SuggestionEngine({
 })
 
 // Config for menu display.
-const suggestionTypeDisplay = new Map([
+const suggestionLabels = new Map([
   [SuggestionType.OpenTab, 'OPEN_TAB'],
   [SuggestionType.ClosedTab, 'RECENTLY_CLOSED'],
   [SuggestionType.SyncedTab, 'SYNCED_TAB'],
@@ -38,7 +38,7 @@ const suggestionTypeDisplay = new Map([
  * @param {number} digitCount
  * @returns {string}
  */
-const DMENU_TEMPLATE = (item, index, digitCount) => `${index.toString().padStart(digitCount, '0')} ${suggestionTypeDisplay.get(item.type)} ${item.title} ${item.url}`
+const DMENU_TEMPLATE = (item, index, digitCount) => `${index.toString().padStart(digitCount, '0')} ${suggestionLabels.get(item.type)} ${item.title} ${item.url}`
 
 /**
  * Adds items to the browser’s context menu.
