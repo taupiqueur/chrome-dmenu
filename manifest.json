@@ -2,7 +2,7 @@
   "name": "dmenu",
   "version": "0.1.0",
   "description": "Tab search, selection and beyond with a dynamic menu program.",
-  "homepage_url": "https://github.com/taupiqueur/chrome-dmenu",
+  "homepage_url": "https://taupiqueur.github.io/chrome-dmenu",
   "author": "Mathieu Ablasou <taupiqueur.kanto@gmail.com>",
   "manifest_version": 3,
   "background": {
