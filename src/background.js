@@ -28,6 +28,7 @@ const suggestionLabels = new Map([
   [SuggestionType.ReadingList, 'READING_LIST'],
   [SuggestionType.History, 'RECENTLY_VISITED'],
   [SuggestionType.Download, 'DOWNLOAD'],
+  [SuggestionType.Extension, 'EXTENSION'],
 ])
 
 /**

@@ -13,6 +13,7 @@ Permission | Justification
 [`"contextMenus"`] | This permission is used to add the “Documentation” and “Support Chat” buttons to the dmenu toolbar.
 [`"downloads"`] | This permission is used to get and activate download suggestions.
 [`"history"`] | This permission is used to get recently visited page suggestions.
+[`"management"`] | This permission is used to get installed extension suggestions.
 [`"nativeMessaging"`] | This permission is used to allow communication with the shell application.
 [`"readingList"`] | This permission is used to get reading list suggestions.
 [`"scripting"`] | This permission is used for copying debug information to the system clipboard.
@@ -26,6 +27,7 @@ Permission | Justification
 [`"contextMenus"`]: https://developer.chrome.com/docs/extensions/reference/permissions-list#contextMenus
 [`"downloads"`]: https://developer.chrome.com/docs/extensions/reference/permissions-list#downloads
 [`"history"`]: https://developer.chrome.com/docs/extensions/reference/permissions-list#history
+[`"management"`]: https://developer.chrome.com/docs/extensions/reference/permissions-list#management
 [`"nativeMessaging"`]: https://developer.chrome.com/docs/extensions/reference/permissions-list#nativeMessaging
 [`"readingList"`]: https://developer.chrome.com/docs/extensions/reference/permissions-list#readingList
 [`"scripting"`]: https://developer.chrome.com/docs/extensions/reference/permissions-list#scripting

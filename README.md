@@ -25,6 +25,7 @@ A browser extension that lets you search tabs with a dynamic menu program—such
 - Reading list search.
 - Recently visited page search.
 - Download search.
+- Installed extension search.
 - Combined search.
 
 ## Installation
