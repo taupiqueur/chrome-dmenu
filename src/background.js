@@ -93,6 +93,7 @@ function onInstalled(details) {
       break
   }
   createMenuItems()
+  recentTabsManager.onInstalled(details)
 }
 
 /**
@@ -122,6 +123,18 @@ async function onUpdate(previousVersion) {
     ...defaults,
     ...localStorage
   })
+}
+
+/**
+ * Handles startup when a profile is started
+ * (e.g., when the browser first starts up).
+ *
+ * https://developer.chrome.com/docs/extensions/reference/api/runtime#event-onStartup
+ *
+ * @returns {void}
+ */
+function onStartup() {
+  recentTabsManager.onStartup()
 }
 
 /**
@@ -320,9 +333,6 @@ function onConnect(port) {
   }
 }
 
-// Configure dmenu.
-chrome.storage.sync.get((options) => Object.assign(dmenu, options.dmenu))
-
 /**
  * Handles tab activation, when the active tab in a window changes.
  * Note window activation does not change the active tab.
@@ -378,9 +388,17 @@ function onWindowFocusChanged(windowId) {
   recentTabsManager.onWindowFocusChanged(windowId)
 }
 
+// Configure dmenu.
+chrome.storage.sync.get((options) => {
+  Object.assign(dmenu, options.dmenu)
+})
+
+recentTabsManager.restoreState()
+
 // Set up listeners.
 // https://developer.chrome.com/docs/extensions/develop/concepts/service-workers/events
 chrome.runtime.onInstalled.addListener(onInstalled)
+chrome.runtime.onStartup.addListener(onStartup)
 chrome.storage.onChanged.addListener(onOptionsChange)
 chrome.action.onClicked.addListener(onAction)
 chrome.contextMenus.onClicked.addListener(onMenuItemClicked)
@@ -389,4 +407,3 @@ chrome.tabs.onActivated.addListener(onTabActivated)
 chrome.tabs.onRemoved.addListener(onTabRemoved)
 chrome.tabs.onReplaced.addListener(onTabReplaced)
 chrome.windows.onFocusChanged.addListener(onWindowFocusChanged)
-recentTabsManager.onStartup()
